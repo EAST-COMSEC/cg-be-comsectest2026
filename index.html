@@ -716,6 +716,7 @@
     </div>
     <div class="header-controls">
       <button type="button" class="icon-btn" id="muteToggle" aria-label="เพลงประกอบ: ปิดอยู่ (กดเพื่อเปิด)">🔇</button>
+      <audio id="bgMusic" src="song/pinkpanther.mp3" loop preload="auto"></audio>
       <div class="lang-toggle" role="group" aria-label="เลือกภาษา / Language">
         <button type="button" class="lang-btn is-active" data-lang="th" id="langThBtn">
           <span class="flag" aria-hidden="true">🇹🇭</span><span>TH</span>
@@ -737,6 +738,7 @@
 
 <main>
 
+  <!-- ===== SCREEN 1: REGISTRATION ===== -->
   <section id="screen-register" class="screen">
     <div class="screen-inner">
       <p class="eyebrow" data-i18n="eyebrowRegister">ภารกิจที่ 1 / 4 — LEARNER REGISTRATION</p>
@@ -787,6 +789,7 @@
     </div>
   </section>
 
+  <!-- ===== SCREEN 2: BRIEFING ROOM ===== -->
   <section id="screen-briefing" class="screen" hidden>
     <div class="screen-inner">
       <p class="eyebrow" data-i18n="eyebrowBriefing">ภารกิจที่ 2 / 4 — THE BRIEFING ROOM</p>
@@ -818,6 +821,7 @@
     </div>
   </section>
 
+  <!-- ===== SCREEN 3: ASSESSMENT QUIZ ===== -->
   <section id="screen-assessment" class="screen" hidden>
     <div class="screen-inner">
       <p class="eyebrow" data-i18n="eyebrowAssessment">ภารกิจที่ 3 / 4 — ASSESSMENT</p>
@@ -843,7 +847,8 @@
         <div class="quiz-question" id="quizQuestionText">คำถามจะปรากฏที่นี่...</div>
         
         <div class="choices-grid" id="quizChoices">
-          </div>
+          <!-- Choices will be injected here via JS -->
+        </div>
 
         <div id="quizFeedback" class="feedback-panel" hidden>
           <div class="feedback-title" id="feedbackTitle"></div>
@@ -859,6 +864,7 @@
     </div>
   </section>
 
+  <!-- ===== SCREEN 4: SUMMARY ===== -->
   <section id="screen-summary" class="screen" hidden>
     <div class="screen-inner">
       <p class="eyebrow" data-i18n="eyebrowSummary">ภารกิจที่ 4 / 4 — FINAL RESULT</p>
@@ -891,21 +897,20 @@
 
 </main>
 
-  function startMusic(){
-    if(musicPlaying) return;
-    if(bgMusic) {
-      bgMusic.currentTime = 0; // บังคับให้เพลงรีเซ็ตกลับไปวินาทีที่ 0 เสมอก่อนเริ่มเล่น
-      bgMusic.play().then(function() {
-        musicPlaying = true;
-        updateMuteIcon();
-      }).catch(function(e) {
-        console.log("Audio play prevented", e);
-        // หากเบราว์เซอร์บล็อกเสียง ให้แสดงไอคอนปิดเสียงไว้ เพื่อให้ผู้ใช้กดเปิดเองได้
-        musicPlaying = false;
-        updateMuteIcon();
-      });
-    }
-  }
+<!-- ===== Dossier modal ===== -->
+<div class="modal" id="dossierModal" hidden role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-card">
+    <button class="modal-close" id="modalClose" data-i18n-aria="modalCloseAria" aria-label="ปิดแฟ้ม">✕</button>
+    <div class="modal-thumb" id="modalThumb"></div>
+    <p class="modal-eyebrow" id="modalEyebrow">แฟ้มลับ</p>
+    <h3 id="modalTitle"></h3>
+    <p class="modal-body-text" id="modalBodyText"></p>
+    <p class="modal-note" data-i18n="modalNote">ข้อความนี้เป็นเนื้อหาตัวอย่างสำหรับสาธิตระบบเว็บไซต์ ทีมงานสามารถแก้ไขให้ตรงกับนโยบายฉบับจริงที่บริษัทอนุมัติแล้วได้</p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-primary" id="modalCloseBtn" data-i18n="modalCloseBtn">ปิดแฟ้ม</button>
+    </div>
+  </div>
+</div>
 
 <script>
 (function(){
@@ -1500,12 +1505,12 @@
   });
 
   /* =========================================================
-     9. Dossiers (6 Key Messages)
+     9. Dossiers (6 Key Messages + Update Exact Image Paths)
      ========================================================= */
   var DOSSIERS = [
     { key:'pdpa', imgSrc:'image/1. PDPA.jpg', th:{ title:'PDPA — การคุ้มครองข้อมูลส่วนบุคคล', body:'พนักงานต้องเก็บรวบรวม ใช้ และเปิดเผยข้อมูลส่วนบุคคลของลูกค้าและพนักงานเท่าที่จำเป็น และต้องได้รับความยินยอมตามที่กฎหมาย PDPA กำหนดเท่านั้น ห้ามนำข้อมูลไปใช้นอกเหนือจากวัตถุประสงค์ที่แจ้งไว้โดยเด็ดขาด' }, en:{ title:'PDPA — Personal Data Protection', body:'Employees must collect, use, and disclose customers\u2019 and employees\u2019 personal data only when necessary, and only with consent obtained as required by the Personal Data Protection Act (PDPA). Using data beyond its stated purpose is strictly prohibited.' } },
     { key:'anticorruption', imgSrc:'image/2. Anti-Corruption.jpg', th:{ title:'Anti-Corruption — การต่อต้านการทุจริต', body:'ห้ามเรียก รับ หรือให้สินบนทุกรูปแบบ ทั้งเงิน ของขวัญ หรือผลประโยชน์อื่นใด เพื่อแลกกับการอนุมัติสินเชื่อหรือการปฏิบัติหน้าที่โดยมิชอบ ทุกธุรกรรมต้องตรวจสอบย้อนกลับได้เสมอ' }, en:{ title:'Anti-Corruption — Combating Fraud', body:'Soliciting, accepting, or offering any form of bribery in exchange for loan approval or improper performance of duties is strictly forbidden. Every transaction must remain fully traceable.' } },
-    { key:'whistleblowing', imgSrc:'image/3. Whistlebrowing.jpg', th:{ title:'Whistleblowing — ช่องทางการแจ้งเบาะแส', body:'พนักงานทุกคนมีสิทธิ์แจ้งเบาะแสการกระทำผิดผ่านช่องทางที่บริษัทกำหนดได้โดยไม่เปิดเผยตัวตน และจะได้รับการคุ้มครองจากการถูกกลั่นแกล้งหรือเลิกจ้างอย่างไม่เป็นธรรม' }, en:{ title:'Whistleblowing — Reporting Channel', body:'Every employee has the right to report misconduct anonymously through the company\u2019s designated channel, and will be protected from retaliation or unfair dismissal as a result.' } },
+    { key:'whistleblowing', imgSrc:'image/3. Whistleblowing.jpg', th:{ title:'Whistleblowing — ช่องทางการแจ้งเบาะแส', body:'พนักงานทุกคนมีสิทธิ์แจ้งเบาะแสการกระทำผิดผ่านช่องทางที่บริษัทกำหนดได้โดยไม่เปิดเผยตัวตน และจะได้รับการคุ้มครองจากการถูกกลั่นแกล้งหรือเลิกจ้างอย่างไม่เป็นธรรม' }, en:{ title:'Whistleblowing — Reporting Channel', body:'Every employee has the right to report misconduct anonymously through the company\u2019s designated channel, and will be protected from retaliation or unfair dismissal as a result.' } },
     { key:'coi', imgSrc:'image/4. Conflict of Interest.jpg', th:{ title:'Conflict of Interest — ความขัดแย้งทางผลประโยชน์', body:'หากธุรกรรมเกี่ยวข้องกับญาติหรือผู้มีส่วนได้เสียส่วนตัว พนักงานต้องเปิดเผยความสัมพันธ์นั้นต่อผู้บังคับบัญชาก่อนดำเนินการทุกครั้ง และต้องถอนตัวจากการตัดสินใจที่เกี่ยวข้อง' }, en:{ title:'Conflict of Interest', body:'If a transaction involves a relative or another party in which an employee has a personal interest, the employee must disclose that relationship to their supervisor before proceeding, and must recuse themselves from any related decision.' } },
     { key:'fairtreatment', imgSrc:'image/5. Fair Treatment.jpg', th:{ title:'Fair Treatment — การปฏิบัติต่อลูกค้า', body:'การติดตามทวงถามหนี้ต้องเป็นไปตามกฎหมายควบคุมการทวงถามหนี้ ห้ามใช้ถ้อยคำข่มขู่ หรือกระทำการใดที่สร้างความเดือดร้อนต่อลูกค้าและบุคคลในครอบครัว' }, en:{ title:'Fair Treatment — Treating Customers', body:'Debt collection must comply with debt-collection regulations. Intimidating language or any action that causes distress to customers or their family members is prohibited.' } },
     { key:'confidentiality', imgSrc:'image/6. Confidentiality.jpg', th:{ title:'Confidentiality — ความปลอดภัยข้อมูล', body:'ห้ามนำเอกสาร รหัสผ่าน หรือข้อมูลภายในของบริษัทออกไปเผยแพร่หรือใช้งานส่วนตัว และต้องป้องกันการเข้าถึงระบบโดยผู้ไม่มีสิทธิ์อย่างเคร่งครัด' }, en:{ title:'Confidentiality — Information Security', body:'Company documents, passwords, or internal information must not be disclosed or used for personal purposes, and unauthorized system access must be strictly prevented.' } }
@@ -1528,6 +1533,7 @@
 
       var thumb = document.createElement('span');
       thumb.className = 'dossier-thumb';
+      // เรียกใช้โครงสร้างรูปภาพตรงตามที่คุณกำหนด
       thumb.innerHTML = '<img src="' + d.imgSrc + '" alt="รูปภาพประกอบ" loading="lazy" onerror="this.closest(\'.dossier-thumb\').classList.add(\'thumb-fallback\');this.replaceWith(Object.assign(document.createElement(\'span\'),{textContent:\'🗂️\'}));">';
 
       var fileNo = document.createElement('span');
@@ -1816,7 +1822,7 @@
     var originalText = btn.textContent;
     btn.textContent = (currentLang === 'th') ? 'กำลังบันทึกข้อมูล...' : 'Saving data...';
 
-    // เตรียมข้อมูลที่จะส่งไป Sheet
+    // เตรียม Payload สำหรับส่งไปที่ Google Sheet
     var payload = {
         name: employeeData.name,
         department: employeeData.dept,
@@ -1824,38 +1830,22 @@
         maxScore: 10,
         attempt: quizState.attempt,
         status: (quizState.score >= 8) ? "Pass" : "Fail",
-        timestamp: formatStamp(new Date(), currentLang)
+        timestamp: new Date().toISOString()
     };
 
     try {
-        // ลิงก์ Google Apps Script ของคุณ
+        // URL ของ Google Apps Script Web App (เชื่อมต่อกับ Google Sheet "CG and Business Ethics 2026" แล้ว)
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxT2g7Aeqsq3RtLXGliAyXOxTmg2CvXrl77kBtGZviC8bWGSzZBBVVqnUbwfKOUoFx-/exec";
 
-        // ยิงข้อมูลไปที่ Sheet
-        const response = await fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(payload)
+        // ยิงข้อมูลเข้า Webhook Google Apps Script
+        // หมายเหตุ: ใช้ Content-Type เป็น text/plain เพื่อให้ Apps Script อ่าน e.postData.contents ได้ครบถ้วน
+        // (ถ้าใช้ application/json คู่กับ mode no-cors อาจทำให้ตัวข้อมูลไปไม่ถึงสคริปต์)
+        await fetch(GOOGLE_SCRIPT_URL, {
+           method: 'POST',
+           mode: 'no-cors',
+           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+           body: JSON.stringify(payload)
         });
-
-        const result = await response.json();
-
-        if (result.result === "success") {
-            alert(currentLang === 'th' ? 
-        // [ข้อควรจำ]: ให้นำ URL ของ Google Apps Script Web App มาใส่ตรงตัวแปรนี้
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycb.../exec"; // <-- แก้ URL ตรงนี้
-
-        if(GOOGLE_SCRIPT_URL.includes("AKfycb...")) {
-           console.log("เตรียมส่งข้อมูลไปยังระบบ:", payload);
-           await new Promise(r => setTimeout(r, 1000)); // จำลองดีเลย์
-        } else {
-           await fetch(GOOGLE_SCRIPT_URL, {
-              method: 'POST',
-              mode: 'no-cors',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(payload)
-           });
-        }
 
         alert(currentLang === 'th' ? 
           "ระบบได้ส่งข้อมูลของคุณ (ชื่อ: " + payload.name + ", แผนก: " + payload.department + ", คะแนน: " + payload.score + "/10) ไปยังฐานข้อมูลเรียบร้อยแล้ว\n\nคุณสามารถปิดหน้าต่างเว็บไซต์นี้ได้" : 
@@ -1871,29 +1861,30 @@
   });
 
   /* =========================================================
-     13. Background music (เปลี่ยนมาใช้ Audio File .mp3)
+     13. Background music (song/pinkpanther.mp3)
      ========================================================= */
-  var bgMusic = document.getElementById('bgMusic');
   var musicPlaying = false;
+  var bgMusicEl = document.getElementById('bgMusic');
 
   function startMusic(){
-    if(musicPlaying) return;
-    if(bgMusic) {
-      bgMusic.play().then(function() {
-        musicPlaying = true;
-        updateMuteIcon();
-      }).catch(function(e) {
-        console.log("Audio play prevented", e);
+    if(musicPlaying || !bgMusicEl) return;
+    bgMusicEl.volume = 0.35;
+    var playPromise = bgMusicEl.play();
+    if(playPromise && typeof playPromise.catch === 'function'){
+      playPromise.catch(function(err){
+        console.warn('ไม่สามารถเล่นเพลงประกอบได้:', err);
       });
     }
+    musicPlaying = true;
+    updateMuteIcon();
   }
 
   function stopMusic(permanent){
-    if(bgMusic) {
-      bgMusic.pause();
-      if(permanent) bgMusic.currentTime = 0;
-    }
     musicPlaying = false;
+    if(bgMusicEl){
+      bgMusicEl.pause();
+      if(permanent){ bgMusicEl.currentTime = 0; }
+    }
     updateMuteIcon();
   }
 
