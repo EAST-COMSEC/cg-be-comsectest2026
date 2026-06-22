@@ -891,21 +891,21 @@
 
 </main>
 
-<div class="modal" id="dossierModal" hidden role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-  <div class="modal-card">
-    <button class="modal-close" id="modalClose" data-i18n-aria="modalCloseAria" aria-label="ปิดแฟ้ม">✕</button>
-    <div class="modal-thumb" id="modalThumb"></div>
-    <p class="modal-eyebrow" id="modalEyebrow">แฟ้มลับ</p>
-    <h3 id="modalTitle"></h3>
-    <p class="modal-body-text" id="modalBodyText"></p>
-    <p class="modal-note" data-i18n="modalNote">ข้อความนี้เป็นเนื้อหาตัวอย่างสำหรับสาธิตระบบเว็บไซต์ ทีมงานสามารถแก้ไขให้ตรงกับนโยบายฉบับจริงที่บริษัทอนุมัติแล้วได้</p>
-    <div class="modal-actions">
-      <button type="button" class="btn btn-primary" id="modalCloseBtn" data-i18n="modalCloseBtn">ปิดแฟ้ม</button>
-    </div>
-  </div>
-</div>
-
-<audio id="bgMusic" src="audio/pinkpanther.mp3" loop preload="auto"></audio>
+  function startMusic(){
+    if(musicPlaying) return;
+    if(bgMusic) {
+      bgMusic.currentTime = 0; // บังคับให้เพลงรีเซ็ตกลับไปวินาทีที่ 0 เสมอก่อนเริ่มเล่น
+      bgMusic.play().then(function() {
+        musicPlaying = true;
+        updateMuteIcon();
+      }).catch(function(e) {
+        console.log("Audio play prevented", e);
+        // หากเบราว์เซอร์บล็อกเสียง ให้แสดงไอคอนปิดเสียงไว้ เพื่อให้ผู้ใช้กดเปิดเองได้
+        musicPlaying = false;
+        updateMuteIcon();
+      });
+    }
+  }
 
 <script>
 (function(){
@@ -1816,7 +1816,7 @@
     var originalText = btn.textContent;
     btn.textContent = (currentLang === 'th') ? 'กำลังบันทึกข้อมูล...' : 'Saving data...';
 
-    // เตรียม Payload สำหรับส่งไปที่ Google Sheet (ไม่มีตัวแปร Position แล้ว)
+    // เตรียมข้อมูลที่จะส่งไป Sheet
     var payload = {
         name: employeeData.name,
         department: employeeData.dept,
@@ -1824,10 +1824,24 @@
         maxScore: 10,
         attempt: quizState.attempt,
         status: (quizState.score >= 8) ? "Pass" : "Fail",
-        timestamp: new Date().toISOString()
+        timestamp: formatStamp(new Date(), currentLang)
     };
 
     try {
+        // ลิงก์ Google Apps Script ของคุณ
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxT2g7Aeqsq3RtLXGliAyXOxTmg2CvXrl77kBtGZviC8bWGSzZBBVVqnUbwfKOUoFx-/exec";
+
+        // ยิงข้อมูลไปที่ Sheet
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (result.result === "success") {
+            alert(currentLang === 'th' ? 
         // [ข้อควรจำ]: ให้นำ URL ของ Google Apps Script Web App มาใส่ตรงตัวแปรนี้
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycb.../exec"; // <-- แก้ URL ตรงนี้
 
