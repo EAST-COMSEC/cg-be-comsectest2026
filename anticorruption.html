@@ -330,16 +330,22 @@
 </head>
 <body>
 
+<!-- Mission Impossible Theme -->
+<audio id="bgMusic" loop preload="auto">
+  <source src="image/missionimpossible.mp3" type="audio/mpeg">
+</audio>
+
 <header class="mission-bar">
   <div class="mission-row">
     <div class="brand">
-      <img src="image/east-logo.png" alt="EAST AUTO CASH" style="height:38px;width:auto;object-fit:contain;filter:brightness(0) invert(1);flex-shrink:0;">
+      <img src="image/east-logo.png" alt="EAST AUTO CASH" style="height:42px;width:auto;object-fit:contain;filter:drop-shadow(0 0 2px rgba(255,255,255,.8)) brightness(1.15);flex-shrink:0;background:rgba(255,255,255,.12);border-radius:6px;padding:4px 8px;">
       <div class="brand-text">
         <strong>EAST AUTO CASH</strong>
         <span>THE INTEGRITY AGENT · <span data-i18n="brandTagline">ภารกิจต้านทุจริต 2026</span></span>
       </div>
     </div>
     <div class="header-controls">
+      <button type="button" class="icon-btn" id="musicBtn" title="เปิด/ปิดเพลง" onclick="toggleMusic()">🔊</button>
       <a href="index.html" class="icon-btn" title="กลับหน้าหลัก" style="text-decoration:none;font-size:.75rem;">🏠</a>
       <div class="lang-toggle" role="group" aria-label="เลือกภาษา / Language">
         <button type="button" class="lang-btn is-active" id="langThBtn">
@@ -472,7 +478,12 @@
       <p class="eyebrow" data-i18n="eyebrowSummary">ภารกิจที่ 4 / 4 — MISSION RESULT</p>
       <h1 data-i18n="h4Summary">สรุปผลการทดสอบ</h1>
       <div class="summary-card">
-        <div class="summary-icon" id="sumIcon">🏆</div>
+        <!-- Result Video -->
+        <div style="width:100%;max-width:480px;margin:0 auto 22px;border-radius:14px;overflow:hidden;box-shadow:0 8px 24px -8px rgba(0,0,0,.4);">
+          <video id="resultVideo" autoplay muted playsinline style="width:100%;display:block;border-radius:14px;">
+            <source id="resultVideoSrc" src="" type="video/mp4">
+          </video>
+        </div>
         <h2 class="summary-title" id="sumTitle">ผ่านการประเมิน</h2>
         <p class="summary-subtitle" id="sumSubtitle">คุณได้ทำภารกิจ The Integrity Agent 2026 สำเร็จแล้ว</p>
         <div class="score-box pass" id="sumScoreBox">
@@ -486,9 +497,10 @@
           <div><dt data-i18n="resLblStamp">วันเวลาที่บันทึกผล</dt><dd id="sumStamp"></dd></div>
         </dl>
         <div class="summary-actions">
-          <button type="button" id="retakeBtn" class="btn" style="background:#e0e0e0;color:#333;" hidden data-i18n="retakeBtn">ทำแบบทดสอบอีกครั้ง</button>
-          <button type="button" id="finishBtn" class="btn btn-primary" data-i18n="finishBtn">จบภารกิจ / ปิดหน้าต่าง</button>
+          <button type="button" id="retakeBtn" class="btn" style="background:#e0e0e0;color:#333;display:none;" data-i18n="retakeBtn">ทำแบบทดสอบอีกครั้ง</button>
+          <button type="button" id="finishBtn" class="btn btn-primary" data-i18n="finishBtn">ส่งผลคะแนนเข้าระบบ</button>
         </div>
+        <p id="sumSendingMsg" style="margin-top:12px;font-size:.85rem;color:#666;display:none;" data-i18n="sendingMsg">กำลังส่งข้อมูล...</p>
       </div>
     </div>
   </section>
@@ -522,7 +534,7 @@ var DICT = {
     eyebrowRegister:'ภารกิจที่ 1 / 4 — AGENT REGISTRATION',
     h1Register:'ลงทะเบียน',
     ledeRegister:'ก่อนเริ่มภารกิจ The Integrity Agent 2026 พนักงานทุกคนต้องลงทะเบียนเพื่อรับบัตรประจำตัว ระบบจะบันทึกวันและเวลาลงทะเบียนให้อัตโนมัติ',
-    fieldName:'ชื่อ-นามสกุล',fieldNamePlaceholder:'เช่น สมชาย ใจดี',
+    fieldName:'ชื่อ-นามสกุล',fieldNamePlaceholder:'เช่น นางสาวไม่มีเอี่ยว ปราศจากผลประโยชน์',
     fieldDept:'แผนก',fieldDeptPlaceholder:'เลือกแผนกของคุณ',
     fieldStamp:'วันเวลาลงทะเบียน (ระบบบันทึกอัตโนมัติ)',
     submitBtn:'ยืนยันตัวตน & รับบัตรพนักงาน',
@@ -555,7 +567,8 @@ var DICT = {
     passSubtitle:'คุณได้ทำภารกิจ The Integrity Agent 2026 สำเร็จแล้ว',
     failSubtitle:'กรุณาทบทวนความรู้และลองใหม่อีกครั้ง (เกณฑ์ผ่าน 80%)',
     retakeBtn:'ทำแบบทดสอบอีกครั้ง (Retake)',
-    finishBtn:'จบภารกิจ / ปิดหน้าต่าง'
+    finishBtn:'ส่งผลคะแนนเข้าระบบ',
+    sendingMsg:'กำลังส่งข้อมูลเข้าระบบ...'
   },
   en:{
     brandTagline:'Anti-Corruption Mission 2026',
@@ -563,7 +576,7 @@ var DICT = {
     eyebrowRegister:'MISSION 1 / 4 — AGENT REGISTRATION',
     h1Register:'Register',
     ledeRegister:'Before starting The Integrity Agent 2026 mission, every employee must register to receive an ID badge. The system automatically records the registration date and time.',
-    fieldName:'Full Name',fieldNamePlaceholder:'e.g. John Smith',
+    fieldName:'Full Name',fieldNamePlaceholder:'e.g. Ms. No Conflict Free of Interest',
     fieldDept:'Department',fieldDeptPlaceholder:'Select your department',
     fieldStamp:'Registration Date & Time (auto-recorded)',
     submitBtn:'Confirm Identity & Receive Badge',
@@ -596,7 +609,8 @@ var DICT = {
     passSubtitle:'You have successfully completed The Integrity Agent 2026 mission.',
     failSubtitle:'Please review the material and try again (80% required).',
     retakeBtn:'Retake Assessment',
-    finishBtn:'Finish / Close Window'
+    finishBtn:'Submit Score to System',
+    sendingMsg:'Submitting data...'
   }
 };
 var currentLang = 'th';
@@ -1103,25 +1117,25 @@ document.getElementById('goBriefing').addEventListener('click',function(){
    8. Dossiers (7 files — Anti-Corruption theme)
    ========================================================= */
 var DOSSIERS=[
-  {key:'zerotol',imgSrc:'image/ac1_zero_tolerance.jpg',
+  {key:'zerotol',imgSrc:'image/7.png',
    th:{title:'Zero Tolerance — ไม่ยอมรับทุจริตทุกรูปแบบ',body:'บริษัทใช้หลัก Zero Tolerance ต่อการทุจริตทุกรูปแบบ ไม่ว่าจะเป็นเจ้าหน้าที่รัฐหรือภาคเอกชน พนักงานต้องไม่เรียก ไม่รับ และไม่ให้สินบนใดๆ บริษัทจะปกป้องพนักงานที่ปฏิเสธสินบนแม้จะทำให้บริษัทเสียโอกาสทางธุรกิจ'},
    en:{title:'Zero Tolerance — No Corruption in Any Form',body:'The company applies Zero Tolerance to all forms of corruption, whether with public or private sector parties. Employees must never solicit, accept, or offer any bribe. The company will protect employees who refuse bribes even when it costs a business opportunity.'}},
-  {key:'gift',imgSrc:'image/ac2_gift_policy.jpg',
+  {key:'gift',imgSrc:'image/8.png',
    th:{title:'Gift Policy — กฎการรับ-ให้ของขวัญ',body:'การรับหรือให้ของขวัญต้องเป็นไปตามประเพณีนิยม มูลค่าไม่เกิน 3,000 บาท ห้ามรับเงินสดหรือสิ่งเทียบเท่าเงินสดโดยเด็ดขาด หากได้รับของขวัญเกินมูลค่าที่กำหนดต้องรายงานและขออนุมัติผ่านแบบฟอร์มที่กำหนดทันที'},
    en:{title:'Gift Policy — Rules for Giving & Receiving',body:'Gifts must conform to normal business customs and not exceed 3,000 Baht in value. Cash or cash equivalents are strictly prohibited. If a gift exceeds the allowed value, it must be reported and approved via the designated form immediately.'}},
-  {key:'facilitation',imgSrc:'image/ac3_facilitation.jpg',
+  {key:'facilitation',imgSrc:'image/9.png',
    th:{title:'Facilitation Payment — ค่าอำนวยความสะดวกเป็นสินบน',body:'บริษัทไม่มีนโยบายจ่ายเงินใดๆ แก่เจ้าหน้าที่รัฐเพื่อเร่งรัดหรืออำนวยความสะดวกในการปฏิบัติหน้าที่ การจ่ายค่าอำนวยความสะดวก (Facilitation Payment) ถือเป็นสินบนรูปแบบหนึ่ง ไม่ว่าจะเป็นจำนวนเล็กน้อยเพียงใดก็ตาม'},
    en:{title:'Facilitation Payment — A Form of Bribery',body:'The company has no policy of paying any amount to government officials to expedite or facilitate the performance of their duties. Facilitation payments are a form of bribery, regardless of how small the amount may be.'}},
-  {key:'coi',imgSrc:'image/ac4_conflict_interest.jpg',
+  {key:'coi',imgSrc:'image/10.png',
    th:{title:'Conflict of Interest — ป้องกันความขัดแย้งทางผลประโยชน์',body:'พนักงานต้องไม่ใช้ตำแหน่งหน้าที่หรือข้อมูลภายในเพื่อเอื้อประโยชน์ให้ตนเอง ครอบครัว หรือผู้ที่รู้จัก เมื่อพบประเด็นที่อาจมีความขัดแย้งทางผลประโยชน์ต้องแจ้งผู้บังคับบัญชาทันทีและถอนตัวจากกระบวนการตัดสินใจ'},
    en:{title:'Conflict of Interest — Prevention',body:'Employees must not use their position or internal information to benefit themselves, family, or acquaintances. When a potential conflict of interest is identified, employees must immediately notify their supervisor and recuse themselves from the relevant decision process.'}},
-  {key:'whistle',imgSrc:'image/ac5_whistleblow.jpg',
+  {key:'whistle',imgSrc:'image/11.png',
    th:{title:'Whistleblowing — ช่องทางแจ้งเบาะแสและมาตรการคุ้มครอง',body:'พนักงานมีหน้าที่รายงานเมื่อพบเห็นการกระทำทุจริตผ่านอีเมลประธานกรรมการตรวจสอบ prapasrp@yahoo.com หรือสำนักเลขานุการบริษัท บริษัทจะเก็บข้อมูลเป็นความลับและคุ้มครองไม่ให้ผู้แจ้งเบาะแสถูกคุกคามหรือได้รับผลกระทบทางลบ'},
    en:{title:'Whistleblowing — Reporting Channels & Protection',body:'Employees are obligated to report when they witness corruption via the Audit Committee Chair at prapasrp@yahoo.com or the Company Secretary. The company will maintain confidentiality and protect whistleblowers from any threat or negative consequence.'}},
-  {key:'stoptest',imgSrc:'image/ac6_stop_test.jpg',
+  {key:'stoptest',imgSrc:'image/12.png',
    th:{title:'Stop Test — หยุดคิดก่อนตัดสินใจ',body:'เมื่อไม่แน่ใจในการตัดสินใจ ให้ถามตัวเองว่า: ขัดกฎหมายไหม? ขัดนโยบายบริษัทไหม? ส่งผลเสียต่อภาพลักษณ์บริษัทไหม? ถ้าคำตอบคือ "ใช่" ในข้อใดข้อหนึ่ง ให้ "หยุดทำ" ทันทีและปรึกษาผู้บังคับบัญชาหรือฝ่าย Compliance'},
    en:{title:'Stop Test — Think Before You Act',body:'When uncertain about a decision, ask yourself: Is it illegal? Does it violate company policy? Would it damage the company\'s reputation? If the answer to any question is "Yes," STOP immediately and consult your supervisor or the Compliance team.'}},
-  {key:'penalty',imgSrc:'image/ac7_penalty.jpg',
+  {key:'penalty',imgSrc:'image/13.png',
    th:{title:'บทลงโทษ — ผลที่ตามมาจากการทุจริต',body:'การทุจริตถือเป็นความผิดวินัยร้ายแรง มีโทษสูงสุดคือให้ออกจากงาน นอกจากนี้อาจถูกดำเนินคดีทางแพ่งเพื่อเรียกร้องค่าเสียหาย และทางอาญาตามกฎหมายที่เกี่ยวข้อง ซึ่งอาจนำไปสู่โทษจำคุกด้วย'},
    en:{title:'Consequences — Penalties for Corruption',body:'Corruption is a serious disciplinary offense with the maximum penalty being dismissal. Additionally, civil claims for damages and criminal prosecution may follow, potentially resulting in imprisonment.'}}
 ];
@@ -1284,27 +1298,42 @@ document.getElementById('quizNextBtn').addEventListener('click',function(){
 function showSummary(){
   setStage(4);
   var isPass=quizState.score>=8;
+  // Play result video
+  var vid=document.getElementById('resultVideo');
+  var src=document.getElementById('resultVideoSrc');
+  src.src=isPass?'clip/happy.mp4':'clip/sad.mp4';
+  vid.load();vid.play().catch(function(){});
+
   document.getElementById('finalScore').textContent=quizState.score;
   var scoreBox=document.getElementById('sumScoreBox');
   scoreBox.className='score-box '+(isPass?'pass':'fail');
   document.getElementById('finalStatus').textContent=isPass?'PASS':'FAIL';
-  document.getElementById('sumIcon').textContent=isPass?'🏆':'⚠️';
   document.getElementById('sumTitle').textContent=isPass?DICT[currentLang].passTitle:DICT[currentLang].failTitle;
   document.getElementById('sumSubtitle').textContent=isPass?DICT[currentLang].passSubtitle:DICT[currentLang].failSubtitle;
   document.getElementById('sumName').textContent=employeeData.name;
   document.getElementById('sumDept').textContent=currentLang==='th'?employeeData.dept:translateDeptToEn(employeeData.dept);
   document.getElementById('sumAttempt').textContent=quizState.attempt+' / '+quizState.maxAttempts;
   document.getElementById('sumStamp').textContent=formatStamp(new Date(),currentLang);
+
   var retakeBtn=document.getElementById('retakeBtn');
-  retakeBtn.hidden=!((!isPass)&&quizState.attempt<quizState.maxAttempts);
+  var finishBtn=document.getElementById('finishBtn');
+  if(!isPass && quizState.attempt<quizState.maxAttempts){
+    retakeBtn.style.display='inline-flex';
+    finishBtn.style.display='none';
+  } else {
+    retakeBtn.style.display='none';
+    finishBtn.style.display='inline-flex';
+    finishBtn.textContent=DICT[currentLang].finishBtn;
+  }
 }
 
 document.getElementById('retakeBtn').addEventListener('click',function(){initQuiz();setStage(3);});
 
 document.getElementById('finishBtn').addEventListener('click',async function(){
   var btn=this;btn.disabled=true;
-  var origText=btn.textContent;
-  btn.textContent=currentLang==='th'?'กำลังบันทึกข้อมูล...':'Saving data...';
+  var msg=document.getElementById('sumSendingMsg');
+  msg.style.display='block';
+  msg.textContent=DICT[currentLang].sendingMsg;
   var payload={
     name:employeeData.name,
     department:employeeData.dept,
@@ -1317,20 +1346,13 @@ document.getElementById('finishBtn').addEventListener('click',async function(){
   };
   try{
     var GOOGLE_SCRIPT_URL='https://script.google.com/macros/s/AKfycbxT2g7Aeqsq3RtLXGliAyXOxTmg2CvXrl77kBtGZviC8bWGSzZBBVVqnUbwfKOUoFx-/exec';
-    await fetch(GOOGLE_SCRIPT_URL,{
-      method:'POST',mode:'no-cors',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body:JSON.stringify(payload)
-    });
-    alert(currentLang==='th'?
-      'ระบบได้ส่งข้อมูลของคุณ (ชื่อ: '+payload.name+', แผนก: '+payload.department+', คะแนน: '+payload.score+'/10) ไปยังฐานข้อมูลเรียบร้อยแล้ว\n\nคุณสามารถปิดหน้าต่างเว็บไซต์นี้ได้':
-      'Your data has been sent to the database successfully. You may now close this window.'
-    );
+    await fetch(GOOGLE_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+    msg.textContent=currentLang==='th'?'✅ ส่งข้อมูลสำเร็จ! กำลังกลับหน้าหลัก...':'✅ Submitted! Returning to home...';
+    setTimeout(function(){window.location.href='index.html';},2000);
   }catch(err){
     console.error(err);
-    alert(currentLang==='th'?'เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาแคปหน้าจอผลสอบนี้ไว้เป็นหลักฐาน':'An error occurred. Please screenshot your result as proof.');
-  }finally{
-    btn.textContent=origText;btn.disabled=false;
+    msg.textContent=currentLang==='th'?'⚠️ เกิดข้อผิดพลาด กรุณาแคปหน้าจอไว้เป็นหลักฐาน':'⚠️ Error. Please screenshot this result as proof.';
+    btn.disabled=false;
   }
 });
 
@@ -1363,7 +1385,22 @@ document.getElementById('langThBtn').addEventListener('click',function(){applyLa
 document.getElementById('langEnBtn').addEventListener('click',function(){applyLanguage('en');});
 
 /* =========================================================
-   12. Init
+   12. Music
+   ========================================================= */
+var music=document.getElementById('bgMusic');
+var musicOn=false;
+function toggleMusic(){
+  if(musicOn){music.pause();musicOn=false;document.getElementById('musicBtn').textContent='🔇';}
+  else{music.play().catch(function(){});musicOn=true;document.getElementById('musicBtn').textContent='🔊';}
+}
+// Autoplay on first user interaction
+document.addEventListener('click',function startMusic(){
+  if(!musicOn){music.volume=0.35;music.play().then(function(){musicOn=true;document.getElementById('musicBtn').textContent='🔊';}).catch(function(){});}
+  document.removeEventListener('click',startMusic);
+},{once:true});
+
+/* =========================================================
+   13. Init
    ========================================================= */
 applyLanguage('th');
 setStage(1);
