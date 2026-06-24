@@ -1297,8 +1297,20 @@ document.getElementById('quizSubmitBtn').addEventListener('click',function(){
   var feedback=document.getElementById('quizFeedback');
   feedback.className='feedback-panel '+(isCorrect?'correct':'incorrect');
   document.getElementById('feedbackTitle').textContent=isCorrect?DICT[currentLang].correctTitle:DICT[currentLang].incorrectTitle;
-  document.getElementById('feedbackDesc').textContent=currentLang==='th'?q.expTh:q.expEn;
-  document.getElementById('feedbackRef').textContent=q.ref;
+  // แสดงคำอธิบายและแหล่งอ้างอิงเฉพาะเมื่อตอบถูกเท่านั้น
+  var descEl=document.getElementById('feedbackDesc');
+  var refEl=document.getElementById('feedbackRef');
+  if(isCorrect){
+    descEl.textContent=currentLang==='th'?q.expTh:q.expEn;
+    descEl.style.display='block';
+    refEl.textContent=q.ref;
+    refEl.style.display='block';
+  } else {
+    descEl.textContent='';
+    descEl.style.display='none';
+    refEl.textContent='';
+    refEl.style.display='none';
+  }
   feedback.hidden=false;
   this.hidden=true;
   document.getElementById('quizNextBtn').hidden=false;
