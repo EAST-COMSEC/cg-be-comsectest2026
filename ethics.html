@@ -719,10 +719,12 @@
       <audio id="bgMusic" src="song/pinkpanther.mp3" loop preload="auto"></audio>
       <div class="lang-toggle" role="group" aria-label="เลือกภาษา / Language">
         <button type="button" class="lang-btn is-active" data-lang="th" id="langThBtn">
-          <span class="flag" aria-hidden="true">🇹🇭</span><span>TH</span>
+          <img class="flag-img" src="https://flagcdn.com/w40/th.png" width="18" height="13" style="object-fit:cover;border-radius:2px;display:inline-block;vertical-align:middle;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'" alt="TH">
+          <span class="flag" aria-hidden="true" style="display:none">🇹🇭</span><span>TH</span>
         </button>
         <button type="button" class="lang-btn" data-lang="en" id="langEnBtn">
-          <span class="flag" aria-hidden="true">🇬🇧</span><span>EN</span>
+          <img class="flag-img" src="https://flagcdn.com/w40/gb.png" width="18" height="13" style="object-fit:cover;border-radius:2px;display:inline-block;vertical-align:middle;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'" alt="EN">
+          <span class="flag" aria-hidden="true" style="display:none">🇬🇧</span><span>EN</span>
         </button>
       </div>
     </div>
@@ -1986,6 +1988,38 @@
   applyLanguage('th');
   setStage(1);
 })();
+
+/* =========================================================
+   Music — auto on briefing, off on quiz, on for summary
+   ========================================================= */
+var music = document.getElementById('bgMusic');
+var musicOn = false;
+if(music) music.volume = 0.35;
+
+function toggleMusic(){
+  if(!music) return;
+  if(musicOn){
+    music.pause(); musicOn = false;
+    var btn = document.getElementById('musicBtn');
+    if(btn) btn.textContent = '🔇';
+  } else {
+    music.play().catch(function(){});
+    musicOn = true;
+    var btn = document.getElementById('musicBtn');
+    if(btn) btn.textContent = '🔊';
+  }
+}
+
+function musicForStage(n){
+  if(!music) return;
+  if(n === 2){
+    if(!musicOn){ music.play().catch(function(){}); musicOn=true; var b=document.getElementById('musicBtn'); if(b)b.textContent='🔊'; }
+  } else if(n === 3){
+    if(musicOn){ music.pause(); musicOn=false; var b=document.getElementById('musicBtn'); if(b)b.textContent='🔇'; }
+  } else if(n === 4){
+    if(!musicOn){ music.play().catch(function(){}); musicOn=true; var b=document.getElementById('musicBtn'); if(b)b.textContent='🔊'; }
+  }
+}
 </script>
 </body>
 </html>
