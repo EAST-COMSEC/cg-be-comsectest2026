@@ -12,10 +12,9 @@
     --navy:#0b2545;--navy-deep:#061a33;--navy-soft:#15335c;
     --paper:#f6f3ea;--paper-dim:#ece7d8;--ink:#14151a;
     --gold:#c9a227;--gold-light:#e7c768;
-    --crimson:#a6192e;--crimson-soft:#c9445a;
+    --crimson:#a6192e;
     --radius-lg:22px;--radius-md:14px;
     --shadow-card:0 18px 40px -18px rgba(11,37,69,.55);
-    font-size:16px;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
@@ -34,72 +33,66 @@
   /* ===== Header ===== */
   .top-bar{
     position:sticky;top:0;z-index:20;
-    background:rgba(6,26,51,.95);backdrop-filter:blur(12px);
+    background:rgba(6,26,51,.96);backdrop-filter:blur(12px);
     border-bottom:2px solid rgba(201,162,39,.35);
-    padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:10px 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
     min-height:72px;
   }
   .brand{display:flex;align-items:center;gap:12px;}
   .brand-text{display:flex;flex-direction:column;line-height:1.25;}
   .brand-text strong{font-family:'Kanit',sans-serif;font-size:.95rem;letter-spacing:.04em;}
   .brand-text span{font-size:.72rem;color:#bcd0e8;letter-spacing:.02em;}
-  .lang-toggle{display:flex;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:3px;gap:2px;}
+  .lang-toggle{
+    display:flex;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:3px;gap:2px;
+  }
   .lang-btn{
     display:flex;align-items:center;gap:5px;border:none;background:transparent;color:#bcd0e8;
     padding:6px 12px;border-radius:999px;font-size:.78rem;font-weight:700;cursor:pointer;
     transition:background .2s,color .2s;font-family:inherit;
   }
-  .lang-btn .flag-img{width:18px;height:13px;object-fit:cover;border-radius:2px;display:inline-block;vertical-align:middle;}
-  .lang-btn .flag-emoji{font-size:1.05rem;line-height:1;}
+  .lang-btn .flag-img{width:18px;height:13px;object-fit:cover;border-radius:2px;vertical-align:middle;}
+  .lang-btn .flag-emoji{font-size:1rem;line-height:1;}
   .lang-btn.is-active{background:var(--gold);color:var(--navy-deep);}
 
   /* ===== Video hero ===== */
   .video-hero{
     position:relative;z-index:1;width:100%;
-    max-height:520px;overflow:hidden;
-    background:#000;
+    min-height:300px;max-height:500px;overflow:hidden;background:#000;
   }
-  .video-hero video{
-    width:100%;max-height:520px;object-fit:cover;
-    display:block;
-  }
-  .video-overlay{
-    position:absolute;inset:0;
-    background:linear-gradient(to bottom,rgba(6,26,51,.1) 0%,rgba(6,26,51,.82) 100%);
-    display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
-    padding:0 32px 40px;text-align:center;
+  .video-hero video{width:100%;height:100%;max-height:500px;object-fit:cover;display:block;}
+
+  /* ===== Hero text — BELOW video, NOT overlay ===== */
+  .hero-text-block{
+    position:relative;z-index:1;
+    background:linear-gradient(180deg,var(--navy-soft) 0%,var(--navy-deep) 100%);
+    text-align:center;padding:36px 24px 28px;
   }
   .hero-badge{
     display:inline-block;font-family:'Space Mono',monospace;
-    font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+    font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;
     color:var(--gold);border:1px solid rgba(201,162,39,.4);
-    padding:6px 18px;border-radius:999px;margin-bottom:14px;
+    padding:5px 16px;border-radius:999px;margin-bottom:16px;
     background:rgba(201,162,39,.08);
   }
-  .video-overlay h1{
-    font-size:clamp(1.3rem,3vw,2.4rem);color:#fff;
-    margin-bottom:10px;line-height:1.25;
-    text-shadow:0 2px 12px rgba(0,0,0,.5);
-    word-break:keep-all;overflow-wrap:break-word;
+  .hero-text-block h1{
+    font-size:clamp(1.7rem,4vw,2.8rem);color:#fff;
+    margin-bottom:12px;line-height:1.3;
   }
-  .video-overlay h1 span{color:var(--gold-light);}
-  .video-overlay p{
-    font-size:1rem;color:#d0e0f0;max-width:520px;
-    text-shadow:0 1px 6px rgba(0,0,0,.6);
-  }
+  .hero-text-block h1 span{color:var(--gold-light);}
+  .hero-text-block p{font-size:1rem;color:#bcd0e8;max-width:560px;margin:0 auto;}
 
-  /* ===== Speech bubble (below video) ===== */
+  /* ===== Agent speech row ===== */
   .agent-row{
-    position:relative;z-index:1;
-    max-width:700px;margin:0 auto;
-    padding:28px 24px 10px;
+    position:relative;z-index:1;max-width:700px;margin:0 auto;
+    padding:24px 24px 8px;
     display:flex;align-items:center;justify-content:center;gap:18px;
   }
   .agent-bubble{
     background:rgba(201,162,39,.1);border:1px solid rgba(201,162,39,.3);
     border-radius:var(--radius-lg);padding:14px 20px;
-    font-size:.92rem;color:#e7d9b8;max-width:340px;text-align:left;
-    position:relative;
+    font-size:.92rem;color:#e7d9b8;max-width:340px;text-align:left;position:relative;
   }
   .agent-bubble::after{
     content:'';position:absolute;right:-12px;top:50%;transform:translateY(-50%);
@@ -111,21 +104,12 @@
     box-shadow:0 0 0 4px rgba(201,162,39,.15),0 10px 20px -6px rgba(0,0,0,.5);
   }
   .agent-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
-  .agent-avatar-fallback{
-    width:70px;height:70px;border-radius:50%;flex-shrink:0;
-    background:linear-gradient(135deg,var(--gold) 0%,#97791b 100%);
-    display:flex;align-items:center;justify-content:center;font-size:2rem;
-    border:3px solid rgba(201,162,39,.4);
-    box-shadow:0 0 0 4px rgba(201,162,39,.15),0 10px 20px -6px rgba(0,0,0,.5);
-  }
 
   /* ===== Policy cards ===== */
-  .cards-section{
-    position:relative;z-index:1;max-width:900px;margin:0 auto;padding:10px 24px 80px;
-  }
+  .cards-section{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:10px 24px 80px;}
   .section-label{
-    font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
-    color:var(--gold);margin-bottom:20px;text-align:center;
+    font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--gold);margin-bottom:20px;text-align:center;
   }
   .policy-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;}
   .policy-card{
@@ -148,7 +132,7 @@
   .card-accent{position:absolute;top:0;left:0;right:0;height:4px;border-radius:var(--radius-lg) var(--radius-lg) 0 0;}
   .card-icon-bg{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem;margin-bottom:18px;}
   .card-tag{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:#9fb3cc;margin-bottom:8px;}
-  .card-title{font-family:'Kanit',sans-serif;font-size:1.25rem;font-weight:700;color:var(--paper);margin-bottom:10px;line-height:1.25;}
+  .card-title{font-family:'Kanit',sans-serif;font-size:1.2rem;font-weight:700;color:var(--paper);margin-bottom:10px;line-height:1.3;}
   .card-desc{font-size:.88rem;color:#9fb3cc;line-height:1.6;margin-bottom:20px;}
   .card-topics{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px;}
   .card-topic-tag{font-size:.72rem;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.07);color:#bcd0e8;border:1px solid rgba(255,255,255,.12);}
@@ -157,13 +141,13 @@
   .policy-card.anticorruption .card-cta{color:#e87a8a;}
   .card-cta-arrow{font-size:1rem;transition:transform .2s;}
   .policy-card:hover .card-cta-arrow{transform:translateX(4px);}
-
   .page-footer{position:relative;z-index:1;text-align:center;padding:24px;font-size:.78rem;color:#4a6080;border-top:1px solid rgba(255,255,255,.06);}
 
   @media(max-width:600px){
     .policy-grid{grid-template-columns:1fr;}
     .agent-row{flex-direction:column;gap:12px;}
     .agent-bubble::after{display:none;}
+    .hero-text-block h1{font-size:1.6rem;}
   }
 </style>
 </head>
@@ -171,7 +155,7 @@
 
 <header class="top-bar">
   <div class="brand">
-    <img src="image/east-logo.png" alt="EAST AUTO CASH" style="height:56px;width:auto;object-fit:contain;flex-shrink:0;background:#fff;border-radius:8px;padding:6px 12px;box-shadow:0 2px 10px rgba(0,0,0,.3);">
+    <img src="image/east-logo.png" alt="EAST AUTO CASH" style="height:52px;width:auto;object-fit:contain;flex-shrink:0;background:#fff;border-radius:8px;padding:5px 10px;box-shadow:0 2px 8px rgba(0,0,0,.25);">
     <div class="brand-text">
       <strong>EAST AUTO CASH</strong>
       <span id="brandTagline">E-LEARNING CENTER · ศูนย์อบรมออนไลน์ 2026</span>
@@ -179,36 +163,41 @@
   </div>
   <div class="lang-toggle" role="group" aria-label="เลือกภาษา / Language">
     <button type="button" class="lang-btn is-active" id="langThBtn">
-      <img class="flag-img" src="https://flagcdn.com/w40/th.png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'" alt="TH" width="18" height="13">
+      <img class="flag-img" src="https://flagcdn.com/w40/th.png" width="18" height="13"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='inline'" alt="TH">
       <span class="flag-emoji" style="display:none">🇹🇭</span><span>TH</span>
     </button>
     <button type="button" class="lang-btn" id="langEnBtn">
-      <img class="flag-img" src="https://flagcdn.com/w40/gb.png" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'" alt="EN" width="18" height="13">
+      <img class="flag-img" src="https://flagcdn.com/w40/gb.png" width="18" height="13"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='inline'" alt="EN">
       <span class="flag-emoji" style="display:none">🇬🇧</span><span>EN</span>
     </button>
   </div>
 </header>
 
 <main>
-  <!-- Video Hero -->
+  <!-- Video — no text overlay, clean -->
   <div class="video-hero">
     <video id="introVideo" autoplay muted playsinline loop>
       <source src="image/openclip.mp4" type="video/mp4">
     </video>
-    <div class="video-overlay">
-      <div class="hero-badge" id="heroBadge">EAST AUTO CASH · E-LEARNING 2026</div>
-      <h1 id="heroTitle">เลือก<span>หลักสูตรอบรม</span><br>ที่คุณต้องการ</h1>
-      <p id="heroDesc">พนักงานทุกท่านต้องผ่านการอบรมทั้ง 2 หลักสูตร เพื่อยืนยันความเข้าใจในนโยบายขององค์กรประจำปี 2569</p>
-    </div>
+  </div>
+
+  <!-- Hero text BELOW video — no overlap -->
+  <div class="hero-text-block">
+    <div class="hero-badge" id="heroBadge">EAST AUTO CASH · E-LEARNING 2026</div>
+    <h1 id="heroTitle">เลือก<span>หลักสูตรอบรม</span>ที่คุณต้องการ</h1>
+    <p id="heroDesc">พนักงานทุกท่านต้องผ่านการอบรมทั้ง 2 หลักสูตร เพื่อยืนยันความเข้าใจในนโยบายขององค์กรประจำปี 2569</p>
   </div>
 
   <!-- Agent speech row -->
   <div class="agent-row">
     <div class="agent-bubble" id="agentSpeech">
-      สวัสดีค่ะ! เลือกหลักสูตรที่ต้องการเพื่อเริ่มภารกิจ<br>แต่ละหลักสูตรใช้เวลาประมาณ 15–20 นาที 🎯
+      สวัสดีค่ะ! เลือกหลักสูตรที่ต้องการเพื่อเริ่มภารกิจ แต่ละหลักสูตรใช้เวลาประมาณ 15–20 นาที 🎯
     </div>
-    <div class="agent-avatar" id="agentAvatarWrap">
-      <img src="image/open.jpg" alt="EAST Agent" onerror="this.closest('.agent-avatar').outerHTML='<div class=\'agent-avatar-fallback\'>👩‍💼</div>'">
+    <div class="agent-avatar">
+      <img src="image/open.jpg" alt="EAST Agent"
+        onerror="this.src='';this.parentElement.innerHTML='<div style=\'width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#c9a227,#97791b);display:flex;align-items:center;justify-content:center;font-size:2rem;\'>👩‍💼</div>'">
     </div>
   </div>
 
@@ -220,7 +209,7 @@
       <a class="policy-card ethics" href="ethics.html">
         <div class="card-accent"></div>
         <div class="card-icon-bg">⚖️</div>
-        <p class="card-tag" id="ethicsTag">หลักสูตรที่ 1 / Course 1</p>
+        <p class="card-tag" id="ethicsTag">หลักสูตรที่ 1</p>
         <h2 class="card-title" id="ethicsTitle">นโยบายกำกับดูแลกิจการและจรรยาบรรณธุรกิจ</h2>
         <p class="card-desc" id="ethicsDesc">ครอบคลุมหลักการ PDPA, การต่อต้านทุจริต, การแจ้งเบาะแส, ความขัดแย้งทางผลประโยชน์, และจรรยาบรรณทางธุรกิจ</p>
         <div class="card-topics">
@@ -236,7 +225,7 @@
       <a class="policy-card anticorruption" href="anticorruption.html">
         <div class="card-accent"></div>
         <div class="card-icon-bg">🔍</div>
-        <p class="card-tag" id="acTag">หลักสูตรที่ 2 / Course 2</p>
+        <p class="card-tag" id="acTag">หลักสูตรที่ 2</p>
         <h2 class="card-title" id="acTitle">นโยบายต่อต้านทุจริตคอร์รัปชัน</h2>
         <p class="card-desc" id="acDesc">ครอบคลุมหลักการไม่รับสินบน, การรับ-ให้ของขวัญ, ค่าอำนวยความสะดวก, ความขัดแย้งทางผลประโยชน์, และช่องทางแจ้งเบาะแส</p>
         <div class="card-topics">
@@ -260,14 +249,13 @@
 <script>
 (function(){
   "use strict";
-  var lang = 'th';
   var DICT = {
     th:{
       tagline:'E-LEARNING CENTER · ศูนย์อบรมออนไลน์ 2026',
       badge:'EAST AUTO CASH · E-LEARNING 2026',
-      heroTitle:'เลือก<span style="color:var(--gold-light)">หลักสูตรอบรม</span><br>ที่คุณต้องการ',
+      heroTitle:'เลือก<span style="color:var(--gold-light)">หลักสูตรอบรม</span>ที่คุณต้องการ',
       heroDesc:'พนักงานทุกท่านต้องผ่านการอบรมทั้ง 2 หลักสูตร เพื่อยืนยันความเข้าใจในนโยบายขององค์กรประจำปี 2569',
-      agentSpeech:'สวัสดีค่ะ! เลือกหลักสูตรที่ต้องการเพื่อเริ่มภารกิจ<br>แต่ละหลักสูตรใช้เวลาประมาณ 15–20 นาที 🎯',
+      agentSpeech:'สวัสดีค่ะ! เลือกหลักสูตรที่ต้องการเพื่อเริ่มภารกิจ แต่ละหลักสูตรใช้เวลาประมาณ 15–20 นาที 🎯',
       sectionLabel:'เลือกหลักสูตร / Select Course',
       ethicsTag:'หลักสูตรที่ 1',
       ethicsTitle:'นโยบายกำกับดูแลกิจการและจรรยาบรรณธุรกิจ',
@@ -283,8 +271,8 @@
       tagline:'E-LEARNING CENTER · Online Training 2026',
       badge:'EAST AUTO CASH · E-LEARNING 2026',
       heroTitle:'Select Your <span style="color:var(--gold-light)">Training Course</span>',
-      heroDesc:'All employees must complete both courses to confirm their understanding of the company\'s policies for 2026.',
-      agentSpeech:'Hello! Select a course to begin your mission.<br>Each course takes approximately 15–20 minutes 🎯',
+      heroDesc:"All employees must complete both courses to confirm their understanding of the company's policies for 2026.",
+      agentSpeech:'Hello! Select a course to begin your mission. Each course takes approximately 15–20 minutes 🎯',
       sectionLabel:'Select Course / เลือกหลักสูตร',
       ethicsTag:'Course 1',
       ethicsTitle:'CG & Business Ethics Policy',
@@ -297,29 +285,31 @@
       footer:'© 2026 East Auto Cash Public Company Limited — Internal E-Learning System'
     }
   };
+
   function applyLang(l){
-    lang=l;var d=DICT[l];
-    document.getElementById('brandTagline').textContent=d.tagline;
-    document.getElementById('heroBadge').textContent=d.badge;
-    document.getElementById('heroTitle').innerHTML=d.heroTitle;
-    document.getElementById('heroDesc').textContent=d.heroDesc;
-    document.getElementById('agentSpeech').innerHTML=d.agentSpeech;
-    document.getElementById('sectionLabel').textContent=d.sectionLabel;
-    document.getElementById('ethicsTag').textContent=d.ethicsTag;
-    document.getElementById('ethicsTitle').textContent=d.ethicsTitle;
-    document.getElementById('ethicsDesc').textContent=d.ethicsDesc;
-    document.getElementById('ethicsCta').textContent=d.ethicsCta;
-    document.getElementById('acTag').textContent=d.acTag;
-    document.getElementById('acTitle').textContent=d.acTitle;
-    document.getElementById('acDesc').textContent=d.acDesc;
-    document.getElementById('acCta').textContent=d.acCta;
-    document.getElementById('footerText').textContent=d.footer;
-    document.getElementById('langThBtn').classList.toggle('is-active',l==='th');
-    document.getElementById('langEnBtn').classList.toggle('is-active',l==='en');
-    document.documentElement.lang=l;
+    var d = DICT[l];
+    document.getElementById('brandTagline').textContent = d.tagline;
+    document.getElementById('heroBadge').textContent = d.badge;
+    document.getElementById('heroTitle').innerHTML = d.heroTitle;
+    document.getElementById('heroDesc').textContent = d.heroDesc;
+    document.getElementById('agentSpeech').textContent = d.agentSpeech;
+    document.getElementById('sectionLabel').textContent = d.sectionLabel;
+    document.getElementById('ethicsTag').textContent = d.ethicsTag;
+    document.getElementById('ethicsTitle').textContent = d.ethicsTitle;
+    document.getElementById('ethicsDesc').textContent = d.ethicsDesc;
+    document.getElementById('ethicsCta').textContent = d.ethicsCta;
+    document.getElementById('acTag').textContent = d.acTag;
+    document.getElementById('acTitle').textContent = d.acTitle;
+    document.getElementById('acDesc').textContent = d.acDesc;
+    document.getElementById('acCta').textContent = d.acCta;
+    document.getElementById('footerText').textContent = d.footer;
+    document.getElementById('langThBtn').classList.toggle('is-active', l==='th');
+    document.getElementById('langEnBtn').classList.toggle('is-active', l==='en');
+    document.documentElement.lang = l;
   }
-  document.getElementById('langThBtn').addEventListener('click',function(){applyLang('th');});
-  document.getElementById('langEnBtn').addEventListener('click',function(){applyLang('en');});
+
+  document.getElementById('langThBtn').addEventListener('click', function(){ applyLang('th'); });
+  document.getElementById('langEnBtn').addEventListener('click', function(){ applyLang('en'); });
   applyLang('th');
 })();
 </script>

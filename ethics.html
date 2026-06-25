@@ -1427,14 +1427,23 @@
       if(n === stageNum) chip.classList.add('is-active');
       if(n > stageNum) chip.classList.add('is-locked');
     });
-    
-    // Manage Screen Visibility
     document.getElementById('screen-register').hidden = (stageNum !== 1);
     document.getElementById('screen-briefing').hidden = (stageNum !== 2);
     document.getElementById('screen-assessment').hidden = (stageNum !== 3);
     document.getElementById('screen-summary').hidden = (stageNum !== 4);
-    
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Music control per stage
+    if(stageNum === 2){
+      // Briefing — เปิดเพลงอัตโนมัติ
+      startMusic();
+    } else if(stageNum === 3){
+      // Quiz — ปิดเพลง
+      stopMusic(false);
+    } else if(stageNum === 4){
+      // Summary — เปิดเพลงอีกครั้ง
+      startMusic();
+    }
   }
 
   /* =========================================================
@@ -1988,38 +1997,6 @@
   applyLanguage('th');
   setStage(1);
 })();
-
-/* =========================================================
-   Music — auto on briefing, off on quiz, on for summary
-   ========================================================= */
-var music = document.getElementById('bgMusic');
-var musicOn = false;
-if(music) music.volume = 0.35;
-
-function toggleMusic(){
-  if(!music) return;
-  if(musicOn){
-    music.pause(); musicOn = false;
-    var btn = document.getElementById('musicBtn');
-    if(btn) btn.textContent = '🔇';
-  } else {
-    music.play().catch(function(){});
-    musicOn = true;
-    var btn = document.getElementById('musicBtn');
-    if(btn) btn.textContent = '🔊';
-  }
-}
-
-function musicForStage(n){
-  if(!music) return;
-  if(n === 2){
-    if(!musicOn){ music.play().catch(function(){}); musicOn=true; var b=document.getElementById('musicBtn'); if(b)b.textContent='🔊'; }
-  } else if(n === 3){
-    if(musicOn){ music.pause(); musicOn=false; var b=document.getElementById('musicBtn'); if(b)b.textContent='🔇'; }
-  } else if(n === 4){
-    if(!musicOn){ music.play().catch(function(){}); musicOn=true; var b=document.getElementById('musicBtn'); if(b)b.textContent='🔊'; }
-  }
-}
 </script>
 </body>
 </html>
