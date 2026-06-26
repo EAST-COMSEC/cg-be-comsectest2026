@@ -176,14 +176,7 @@
 </header>
 
 <main>
-  <!-- Video — no text overlay, clean -->
-  <div class="video-hero">
-    <video id="introVideo" autoplay muted playsinline loop>
-      <source src="image/openclip.mp4" type="video/mp4">
-    </video>
-  </div>
-
-  <!-- Hero text BELOW video — no overlap -->
+  <!-- Hero text — video removed (was not rendering reliably) -->
   <div class="hero-text-block">
     <div class="hero-badge" id="heroBadge">EAST AUTO CASH · E-LEARNING 2026</div>
     <h1 id="heroTitle">เลือก<span>หลักสูตรอบรม</span>ที่คุณต้องการ</h1>
@@ -197,7 +190,7 @@
     </div>
     <div class="agent-avatar">
       <img src="image/open.jpg" alt="EAST Agent"
-        onerror="this.src='';this.parentElement.innerHTML='<div style=\'width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#c9a227,#97791b);display:flex;align-items:center;justify-content:center;font-size:2rem;\'>👩‍💼</div>'">
+        onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.parentElement.innerHTML='<div style=\'width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#c9a227,#97791b);display:flex;align-items:center;justify-content:center;font-size:2rem;\'>👩‍💼</div>'}">
     </div>
   </div>
 
