@@ -1583,8 +1583,8 @@ function applyLanguage(lang){
   }
 }
 
-document.getElementById('langThBtn').addEventListener('click',function(){applyLanguage('th');});
-document.getElementById('langEnBtn').addEventListener('click',function(){applyLanguage('en');});
+document.getElementById('langThBtn').addEventListener('click',function(){applyLanguage('th');localStorage.setItem('elearning_lang','th');});
+document.getElementById('langEnBtn').addEventListener('click',function(){applyLanguage('en');localStorage.setItem('elearning_lang','en');});
 
 /* =========================================================
    12. Music — default OFF, user can toggle
@@ -1603,7 +1603,7 @@ document.getElementById('musicBtn').addEventListener('click', toggleMusic);
 /* =========================================================
    13. Init
    ========================================================= */
-applyLanguage('th');
+applyLanguage(localStorage.getItem('elearning_lang') || 'th');
 setStage(1);
 })();
 </script>

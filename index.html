@@ -301,9 +301,9 @@
     document.documentElement.lang = l;
   }
 
-  document.getElementById('langThBtn').addEventListener('click', function(){ applyLang('th'); });
-  document.getElementById('langEnBtn').addEventListener('click', function(){ applyLang('en'); });
-  applyLang('th');
+  document.getElementById('langThBtn').addEventListener('click', function(){ applyLang('th'); localStorage.setItem('elearning_lang','th'); });
+  document.getElementById('langEnBtn').addEventListener('click', function(){ applyLang('en'); localStorage.setItem('elearning_lang','en'); });
+  applyLang(localStorage.getItem('elearning_lang') || 'th');
 })();
 </script>
 </body>
